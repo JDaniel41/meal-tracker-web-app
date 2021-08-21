@@ -1,22 +1,23 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const port = 3001;
 
-async function main() {
-    const MongoClient = require("mongodb").MongoClient;
-    const uri =
-        "mongodb+srv://admin-meal-tracker:1Mg5eLuBHvqA3NsO@cluster0.dcu5m.mongodb.net/meal_tracker?retryWrites=true&w=majority";
-    const client = new MongoClient(uri, { useNewUrlParser: true });
-    client.connect((err) => {
-        const collection = client.db("test").collection("devices");
-        // perform actions on the collection object
-        client.close();
-    });
-}
-main().catch(console.error);
+let restaurantData = [];
+
+app.use(bodyParser.json());
+
+app.post("/api", (req, res) => {
+    console.log("Request Body");
+    console.log(req.body);
+    let newBusiness = req.body;
+    restaurantData.push(newBusiness);
+
+    res.send(JSON.stringify(restaurantData));
+});
 
 app.get("/api", (req, res) => {
-    res.send(JSON.stringify({ response: "Response Sent" }));
+    res.send(JSON.stringify(restaurantData));
 });
 
 app.listen(port, () => {
