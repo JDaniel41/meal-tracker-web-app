@@ -5,7 +5,7 @@ const port = 3001;
 
 let restaurantData = [];
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.get("/api", (req, res) => {
     res.send(JSON.stringify(restaurantData));
