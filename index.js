@@ -8,11 +8,25 @@ let restaurantData = [];
 app.use(bodyParser.json());
 
 app.post("/api", (req, res) => {
-    console.log("Request Body");
-    console.log(req.body);
     let newBusiness = req.body;
-    restaurantData.push(newBusiness);
 
+    if (!restaurantData.find((element) => newBusiness.name === element.name)) {
+        restaurantData.push(newBusiness);
+    }
+
+    res.send(JSON.stringify(restaurantData));
+});
+
+app.put("/api", (req, res) => {});
+
+app.delete("/api/:businessName", (req, res) => {
+    console.log(req.params.businessName);
+
+    restaurantData = restaurantData.filter((element) => {
+        return element.name !== req.params.businessName;
+    });
+
+    console.log(JSON.stringify(restaurantData));
     res.send(JSON.stringify(restaurantData));
 });
 
