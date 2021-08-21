@@ -2,11 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 let restaurantData = [];
 
-app.use(express.static(path.resolve(_dirname, "../client/build")));
+app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.use(express.json());
 
