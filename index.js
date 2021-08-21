@@ -7,6 +7,10 @@ let restaurantData = [];
 
 app.use(bodyParser.json());
 
+app.get("/api", (req, res) => {
+    res.send(JSON.stringify(restaurantData));
+});
+
 app.post("/api", (req, res) => {
     let newBusiness = req.body;
 
@@ -27,10 +31,6 @@ app.delete("/api/:businessName", (req, res) => {
     });
 
     console.log(JSON.stringify(restaurantData));
-    res.send(JSON.stringify(restaurantData));
-});
-
-app.get("/api", (req, res) => {
     res.send(JSON.stringify(restaurantData));
 });
 

@@ -22,8 +22,6 @@ function App() {
             .catch((error) => {
                 console.log(error);
             });
-
-        //setRestaurants([...restaurants, newRestaurant]);
     }
 
     function deleteRestaraunt(businessName) {
