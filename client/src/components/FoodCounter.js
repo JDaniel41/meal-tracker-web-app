@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function FoodCounter({ name, startingNum, removeCallback, updateCallback }) {
-    const [timesEaten, setTimesEaten] = useState(startingNum);
+    const [timesEaten, setTimesEaten] = useState(Number(startingNum));
 
     function incrementCount() {
         setTimesEaten((oldCount) => oldCount + 1);
