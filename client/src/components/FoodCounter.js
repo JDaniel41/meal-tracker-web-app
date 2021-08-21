@@ -1,15 +1,17 @@
 import { useState } from "react";
 
-function FoodCounter({ name, startingNum, removeCallback }) {
+function FoodCounter({ name, startingNum, removeCallback, updateCallback }) {
     const [timesEaten, setTimesEaten] = useState(startingNum);
 
     function incrementCount() {
         setTimesEaten((oldCount) => oldCount + 1);
+        updateCallback(name, timesEaten + 1);
     }
 
     function decrementCount() {
         if (timesEaten > 0) {
             setTimesEaten((oldCount) => oldCount - 1);
+            updateCallback(name, timesEaten - 1);
         }
     }
 

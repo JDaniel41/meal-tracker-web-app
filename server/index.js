@@ -11,7 +11,7 @@ app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.use(express.json());
 
 app.get("/api", (req, res) => {
-    res.send(JSON.stringify(restaurantData));
+    res.send(restaurantData);
 });
 
 app.get("*", (req, res) => {
@@ -25,10 +25,25 @@ app.post("/api", (req, res) => {
         restaurantData.push(newBusiness);
     }
 
-    res.send(JSON.stringify(restaurantData));
+    res.send(restaurantData);
 });
 
-app.put("/api", (req, res) => {});
+app.put("/api/:businessName/:newCount", (req, res) => {
+    console.log("PUT RUNNING");
+    console.log(req.params);
+    let restaurantToUpdate = restaurantData.find(
+        (element) => element.name === req.params.businessName
+    );
+
+    if (restaurantToUpdate) {
+        restaurantToUpdate.count = req.params.newCount;
+        res.send(restaurantData);
+    } else {
+        res.status(404).send(
+            JSON.stringify({ message: "Restaraunt does not exist" })
+        );
+    }
+});
 
 app.delete("/api/:businessName", (req, res) => {
     console.log(req.params.businessName);
@@ -38,7 +53,7 @@ app.delete("/api/:businessName", (req, res) => {
     });
 
     console.log(JSON.stringify(restaurantData));
-    res.send(JSON.stringify(restaurantData));
+    res.send(restaurantData);
 });
 
 app.listen(port, () => {

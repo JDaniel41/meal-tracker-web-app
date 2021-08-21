@@ -38,6 +38,17 @@ function App() {
             });
     }
 
+    function updateCounterInApi(placeName, newCount) {
+        console.log(placeName);
+        console.log(newCount);
+        axios
+            .put(`/api/${placeName}/${newCount}`)
+            .then((res) => {
+                setRestaurants(res.data);
+            })
+            .catch((error) => console.log(error));
+    }
+
     useEffect(() => {
         axios.get("/api").then((res) => {
             setRestaurants(res.data);
@@ -50,8 +61,9 @@ function App() {
             {restaurants.map((place) => (
                 <FoodCounter
                     name={place.name}
-                    startingNum={0}
+                    startingNum={place.count}
                     removeCallback={deleteRestaraunt}
+                    updateCallback={updateCounterInApi}
                 />
             ))}
         </div>
