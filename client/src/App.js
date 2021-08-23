@@ -1,12 +1,13 @@
-import logo from "./logo.svg";
 import "./App.css";
 import FoodCounter from "./components/FoodCounter";
 import { useState, useEffect } from "react";
 import NewRestarauntForm from "./components/NewRestarauntForm";
 import axios from "axios";
+import RoomCodeEntry from "./components/RoomCodeEntry";
 
 function App() {
-    const [restaurants, setRestaurants] = useState([]);
+    const [restaurants, setRestaurants] = useState(null);
+    const [roomCode, setRoomCode] = useState(null);
 
     function addNewRestaraunt(newName, newCount) {
         let newRestaurant = {
@@ -15,7 +16,7 @@ function App() {
         };
 
         axios
-            .post("/api", newRestaurant)
+            .post(`/api/${roomCode}`, newRestaurant)
             .then((res) => {
                 setRestaurants(res.data);
             })
@@ -28,7 +29,7 @@ function App() {
         console.log("DELETE CALLED!");
 
         axios
-            .delete("/api/" + businessName)
+            .delete(`/api/${roomCode}/` + businessName)
             .then((res) => {
                 console.log(res);
                 setRestaurants(res.data);
@@ -42,30 +43,51 @@ function App() {
         console.log(placeName);
         console.log(newCount);
         axios
-            .put(`/api/${placeName}/${newCount}`)
+            .put(`/api/${roomCode}/${placeName}/${newCount}`)
             .then((res) => {
                 setRestaurants(res.data);
             })
             .catch((error) => console.log(error));
     }
 
-    useEffect(() => {
-        axios.get("/api").then((res) => {
+    function renderRestarauntSection() {
+        console.log(restaurants);
+        if (!restaurants) {
+            return <div></div>;
+        }
+        return (
+            <div>
+                <NewRestarauntForm submitCallback={addNewRestaraunt} />
+                {restaurants.map((place) => (
+                    <FoodCounter
+                        name={place.name}
+                        startingNum={place.count}
+                        removeCallback={deleteRestaraunt}
+                        updateCallback={updateCounterInApi}
+                    />
+                ))}
+            </div>
+        );
+    }
+
+    function roomCodeUpdated(code) {
+        setRoomCode(code);
+        axios.get(`/api/${code}`).then((res) => {
             setRestaurants(res.data);
         });
-    }, []);
+    }
+
+    /*
+    useEffect(() => {
+        axios.get(`/api/${roomCode}`).then((res) => {
+            setRestaurants(res.data);
+        });
+    }, []);*/
 
     return (
         <div>
-            <NewRestarauntForm submitCallback={addNewRestaraunt} />
-            {restaurants.map((place) => (
-                <FoodCounter
-                    name={place.name}
-                    startingNum={place.count}
-                    removeCallback={deleteRestaraunt}
-                    updateCallback={updateCounterInApi}
-                />
-            ))}
+            <RoomCodeEntry updateRoomCodeCallback={roomCodeUpdated} />
+            {renderRestarauntSection()}
         </div>
     );
 }
