@@ -4,6 +4,27 @@ const path = require("path");
 const app = express();
 const port = process.env.PORT || 3001;
 
+const firebase = require("firebase/app");
+require("firebase/database");
+
+// Set the configuration for your app
+// TODO: Replace with your project's config object
+var config = {
+    apiKey: "AIzaSyDhG50KUK4-KPGYtb2d4YnErwm40G4fojA",
+    authDomain: "food-counter-16b59.firebaseapp.com",
+    // For databases not in the us-central1 location, databaseURL will be of the
+    // form https://[databaseName].[region].firebasedatabase.app.
+    // For example, https://your-database-123.europe-west1.firebasedatabase.app
+    databaseURL: "https://food-counter-16b59-default-rtdb.firebaseio.com/",
+    storageBucket: "food-counter-16b59.appspot.com",
+};
+firebase.initializeApp(config);
+
+var database = firebase.database();
+
+// Get a reference to the database service
+var database = firebase.database();
+
 let restaurantData = {};
 /*
 {
