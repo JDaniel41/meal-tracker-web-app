@@ -1,4 +1,3 @@
-import "./App.css";
 import FoodCounter from "./components/FoodCounter";
 import { useState, useEffect } from "react";
 import NewRestarauntForm from "./components/NewRestarauntForm";
@@ -58,14 +57,16 @@ function App() {
         return (
             <div>
                 <NewRestarauntForm submitCallback={addNewRestaraunt} />
-                {restaurants.map((place) => (
-                    <FoodCounter
-                        name={place.name}
-                        startingNum={place.count}
-                        removeCallback={deleteRestaraunt}
-                        updateCallback={updateCounterInApi}
-                    />
-                ))}
+                <div className="grid grid-cols-3 place-items-center w-full">
+                    {restaurants.map((place) => (
+                        <FoodCounter
+                            name={place.name}
+                            startingNum={place.count}
+                            removeCallback={deleteRestaraunt}
+                            updateCallback={updateCounterInApi}
+                        />
+                    ))}
+                </div>
             </div>
         );
     }
@@ -85,7 +86,7 @@ function App() {
     }, []);*/
 
     return (
-        <div>
+        <div className="bg-gray-200 h-screen">
             <RoomCodeEntry updateRoomCodeCallback={roomCodeUpdated} />
             {renderRestarauntSection()}
         </div>

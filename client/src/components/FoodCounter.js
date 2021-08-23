@@ -16,14 +16,16 @@ function FoodCounter({ name, startingNum, removeCallback, updateCallback }) {
     }
 
     return (
-        <div>
-            <h1>{name}</h1>
-            <h2>{timesEaten}</h2>
+        <div className="w-64 p-10">
+            <div className="flex flex-col justify-center bg-white rounded-lg shadow-2xl">
+                <h1 className="font-bold text-center text-3xl pt-5">{name}</h1>
+                <h2 className="text-center text-2xl pt-5">{timesEaten}</h2>
 
-            <div>
-                <button onClick={incrementCount}>+1</button>
-                <button onClick={() => removeCallback(name)}>Remove</button>
-                <button onClick={decrementCount}>-1</button>
+                <div className="w-auto flex justify-around p-5">
+                    <button onClick={decrementCount}>-1</button>
+                    <button onClick={() => removeCallback(name)}>Remove</button>
+                    <button onClick={incrementCount}>+1</button>
+                </div>
             </div>
         </div>
     );

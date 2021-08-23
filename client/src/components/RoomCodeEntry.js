@@ -14,13 +14,14 @@ function RoomCodeEntry({ updateRoomCodeCallback }) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
+        <form onSubmit={handleSubmit} className="flex justify-center">
+            <label className="p-5">
                 Room Code:{" "}
                 <input
-                    type="number"
+                    type="text"
                     value={roomCode}
                     onChange={handleRoomCodeChange}
+                    className="w-20 px-5 text-center"
                 />
             </label>
             <input type="submit"></input>
