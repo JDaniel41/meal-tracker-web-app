@@ -9,14 +9,20 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "engines": {
-      "node": "v12.22.5"
+        "node": "v12.22.5"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@craco/craco": "^6.2.0",
         "axios": "^0.21.1",
         "express": "^4.17.1",
         "mongodb": "^4.1.0"
+    },
+    "devDependencies": {
+        "autoprefixer": "^9.8.6",
+        "postcss": "^7.0.36",
+        "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
     }
 }
