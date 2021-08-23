@@ -18,7 +18,10 @@ function NewRestarauntForm({ submitCallback }) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="flex justify-center">
+        <form
+            onSubmit={handleSubmit}
+            className="flex flex-col md:flex-row justify-center"
+        >
             <label className="px-2">
                 Restaurant Name:{" "}
                 <input
@@ -35,7 +38,7 @@ function NewRestarauntForm({ submitCallback }) {
                     onChange={handleCountChange}
                 />
             </label>
-            <input type="submit"></input>
+            <input type="submit" className="w-20 md:w-auto"></input>
         </form>
     );
 }

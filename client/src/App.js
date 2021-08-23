@@ -57,7 +57,7 @@ function App() {
         return (
             <div>
                 <NewRestarauntForm submitCallback={addNewRestaraunt} />
-                <div className="grid grid-cols-3 place-items-center w-full">
+                <div className="grid grid-cols-2 lg:grid-cols-3 place-items-center w-full">
                     {restaurants.map((place) => (
                         <FoodCounter
                             name={place.name}
