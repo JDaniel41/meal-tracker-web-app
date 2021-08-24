@@ -3,37 +3,29 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const port = process.env.PORT || 3001;
+const MongoClient = require("mongodb").MongoClient;
 
-const firebase = require("firebase/app");
-require("firebase/database");
+let roomCollections;
 
-// Set the configuration for your app
-// TODO: Replace with your project's config object
-var config = {
-    apiKey: "AIzaSyDhG50KUK4-KPGYtb2d4YnErwm40G4fojA",
-    authDomain: "food-counter-16b59.firebaseapp.com",
-    // For databases not in the us-central1 location, databaseURL will be of the
-    // form https://[databaseName].[region].firebasedatabase.app.
-    // For example, https://your-database-123.europe-west1.firebasedatabase.app
-    databaseURL: "https://food-counter-16b59-default-rtdb.firebaseio.com/",
-    storageBucket: "food-counter-16b59.appspot.com",
-};
-firebase.initializeApp(config);
+const url =
+    "mongodb+srv://nodeJsUser:QwEK7DxwHHrAaphU@cluster0.ilevg.mongodb.net/restarauntData?retryWrites=true&w=majority";
 
-var database = firebase.database();
+MongoClient.connect(url, (err, client) => {
+    console.log("CONNECTED");
 
-// Get a reference to the database service
-var database = firebase.database();
-
+    roomCollections = client.db("restarauntData").collection("countData");
+});
 let restaurantData = {};
-/*
-{
-    roomCode1: [],
-    roomCode2: []
-}
-*/
 
-app.use(express.static(path.resolve(__dirname, "../client/build")));
+/*
+MONGO DB Scheme
+{
+    roomCode: 0,
+    restarauntName: name,
+    count: count
+}*/
+
+//app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.use(express.json());
 
@@ -46,33 +38,52 @@ function findData(roomCode) {
     }
 }
 
-app.get("/api/:roomCode", (req, res) => {
-    roomData = findData(req.params.roomCode);
-    console.log(req.params.roomCode);
-    console.log(roomData);
-    console.log(restaurantData);
-    res.send(roomData);
+function parseMongoData(data) {
+    return {
+        name: data.name,
+        count: data.count,
+    };
+}
+
+app.get("/api/:roomCode", async (req, res) => {
+    let mongoResponse = await roomCollections.findOne({
+        roomCode: Number(req.params.roomCode),
+    });
+
+    res.send(mongoResponse.data);
 });
 
-app.get("*", (req, res) => {
+/*app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-});
+});*/
 
-app.post("/api/:roomCode", (req, res) => {
-    console.log(req.params.roomCode);
-    console.log(restaurantData);
-    console.log(restaurantData[req.params.roomCode]);
-    let newBusiness = req.body;
+app.post("/api/:roomCode", async (req, res) => {
+    let newBusinessDoc = {
+        count: Number(req.body.count),
+        name: req.body.name,
+    };
 
-    if (
-        !restaurantData[req.params.roomCode].find(
-            (element) => newBusiness.name === element.name
-        )
-    ) {
-        restaurantData[req.params.roomCode].push(newBusiness);
+    //
+    let existingData = await roomCollections.findOne({
+        roomCode: Number(req.params.roomCode),
+    });
+
+    let existingDataExists = existingData.data.find(
+        (element) =>
+            element.count === newBusinessDoc.count &&
+            element.name === newBusinessDoc.name
+    );
+
+    if (!existingDataExists) {
+        let result = await roomCollections.insertOne(newBusinessDoc);
+        console.log(result);
     }
 
-    res.send(restaurantData[req.params.roomCode]);
+    let newData = await roomCollections.findOne({
+        roomCode: Number(req.params.roomCode),
+    });
+
+    res.send(newData.data);
 });
 
 app.put("/api/:roomCode/:businessName/:newCount", (req, res) => {
@@ -80,7 +91,9 @@ app.put("/api/:roomCode/:businessName/:newCount", (req, res) => {
     console.log(req.params);
     console.log(restaurantData);
     let restaurantToUpdate = restaurantData[req.params.roomCode].find(
-        (element) => element.name === req.params.businessName
+        (element) => {
+            return element.name === req.params.businessName;
+        }
     );
 
     if (restaurantToUpdate) {
